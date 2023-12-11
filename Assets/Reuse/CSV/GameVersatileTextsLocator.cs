@@ -5,11 +5,12 @@ namespace Reuse.CSV
 {
     public static class GameVersatileTextsLocator
     {
-        private static VersatileTextsFiles _versatileTextsFilesAsset = new();
+        private static VersatileTextsFiles _versatileTextsFilesAsset;
         
         private static readonly Dictionary<string, string[]> Texts = new();
 
         private static int _actualLanguage = 0; //The values in the array of texts are accessed by language 
+        private static int _alternativeLanguage = 0; 
         
         private static bool _hasBeenInitialized;
         
@@ -30,6 +31,16 @@ namespace Reuse.CSV
             _actualLanguage = actualLanguage;
         }
 
+        public static void ChangeAlternativeLanguage(int alternativeLanguage)
+        {
+            _alternativeLanguage = alternativeLanguage;
+        }
+
+        public static int GetLanguage(bool isAlternative = false)
+        {
+            return isAlternative ? _alternativeLanguage : _actualLanguage;
+        }
+
         private static void ReadAllVersatileFiles()
         {
             foreach (var csv in _versatileTextsFilesAsset.files)
@@ -41,9 +52,23 @@ namespace Reuse.CSV
             }
         }
 
-        public static string Localize(string key)
+        public static int FindKeyLanguage(string key, string unknownLanguageWord){
+            var line = LocalizeLine(key);
+            for(var i = 0; i < line.Length; i++)
+            {
+                if(unknownLanguageWord == line[i]) return i;
+            }
+
+            return -1;
+        }
+
+        public static string[] LocalizeLine(string key){
+            return !Texts.ContainsKey(key) ? null : Texts[key];
+        }
+
+        public static string Localize(string key, bool isAlternative = false)
         {
-            return !Texts.ContainsKey(key) ? null : Texts[key][_actualLanguage];
+            return !Texts.ContainsKey(key) ? null : (isAlternative ? Texts[key][_alternativeLanguage] : Texts[key][_actualLanguage]);
         }
     }
 }

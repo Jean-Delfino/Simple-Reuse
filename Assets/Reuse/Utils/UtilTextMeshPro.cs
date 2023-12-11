@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -32,6 +33,23 @@ namespace Reuse.Utils
             gradient.bottomLeft = sidedGradient.bottomRight;
             
             text.colorGradientPreset = gradient;
+        }
+        
+        public static void CleanTMProDropdown(TMP_Dropdown tMpDropdown)
+        {
+            tMpDropdown.ClearOptions();
+        }
+
+        public static void AddDropdownOptions(TMP_Dropdown tMpDropdown, IEnumerable<string> options)
+        {
+            var dropdownOptions = new System.Collections.Generic.List<TMP_Dropdown.OptionData>();
+
+            foreach (var option in options)
+            {
+                dropdownOptions.Add(new TMP_Dropdown.OptionData(option));
+            }
+
+            tMpDropdown.AddOptions(dropdownOptions);
         }
     }
 }

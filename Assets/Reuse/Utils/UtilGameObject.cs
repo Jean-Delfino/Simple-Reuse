@@ -11,5 +11,19 @@ namespace Reuse.Utils
                 child.gameObject.SetActive(state);
             }
         }
+        
+        public static GameObject FindParentWithTag(GameObject childObject, string tag)
+        {
+            Transform t = childObject.transform;
+            while (t.parent != null)
+            {
+                if (t.parent.CompareTag(tag))
+                {
+                    return t.parent.gameObject;
+                }
+                t = t.parent.transform;
+            }
+            return null;
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Reuse.InputManagement.InputManagerIndependent
         [Serializable]
         public class Key
         {
-            public string value;
+            public KeyCode value;
             public string keyName;
         }
     }

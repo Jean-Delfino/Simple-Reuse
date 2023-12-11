@@ -6,13 +6,21 @@ namespace Reuse.CSV
 {
     public class GameVersatileTextsController : MonoBehaviour
     {
+        [SerializeField] private bool initializeTextsInAwake = true;
         [SerializeField] private VersatileTextsFiles files;
         
         private static VersatileTextsFiles _files;
 
-        private static readonly List<VersatileText> VersatileTexts = new();
+        private static readonly HashSet<VersatileText> VersatileTexts = new();
+
         public void Awake()
         {
+            if(!initializeTextsInAwake) return;
+
+            CallStartDatabase();
+        }
+
+        public void CallStartDatabase(){
             _files = files;
             GameVersatileTextsLocator.InitializeTexts(_files);
             ChangeActualLanguage(files.actualLanguage);
@@ -22,6 +30,13 @@ namespace Reuse.CSV
         {
             _files.actualLanguage = newLanguage; //This saves the file in memory
             GameVersatileTextsLocator.ChangeActualLanguage(_files.actualLanguage);
+            SetAllTexts();
+        }
+
+        public static void ChangeAlternativeLanguage(int newLanguage)
+        {
+            _files.actualAlternativeLanguage = newLanguage; //This saves the file in memory
+            GameVersatileTextsLocator.ChangeAlternativeLanguage(_files.actualLanguage);
             SetAllTexts();
         }
         

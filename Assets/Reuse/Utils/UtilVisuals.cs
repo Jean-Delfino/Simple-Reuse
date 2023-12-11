@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Reuse.CameraControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -104,6 +105,22 @@ namespace Reuse.Utils
             }while(newColor == actualColor);//Generates a new color
 
             return newColor;
+        }
+        
+        public static Color FindColorAtPoint(Vector3 position, LayerMask layerMask, Color defaultColor){
+            var ray = CameraController.GetMainCamera().ScreenPointToRay(position);
+
+            if (Physics.Raycast(ray, out var hit, Mathf.Infinity, layerMask))
+            {
+                Texture2D texture = hit.collider.GetComponent<Renderer>().material.mainTexture as Texture2D;
+                Vector2 textureCoord = hit.textureCoord;
+                
+                if (texture == null) return defaultColor;
+                
+                return texture.GetPixel(Mathf.FloorToInt(textureCoord.x * texture.width), Mathf.FloorToInt(textureCoord.y * texture.height));
+            }
+
+            return defaultColor;
         }
     }
 }

@@ -8,5 +8,6 @@ namespace Reuse.CSV
         public TextAsset[] files;
 
         public int actualLanguage = 0;
+        public int actualAlternativeLanguage = 1;
     }
 }

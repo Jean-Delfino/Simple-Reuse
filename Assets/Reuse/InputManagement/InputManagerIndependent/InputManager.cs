@@ -47,11 +47,25 @@ namespace Reuse.InputManagement.InputManagerIndependent
             return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value));
         }
 
+        public static int GetAllKey(string key)
+        {
+            return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value) || Input.GetKey(_instance._keyValues[key].negativeKey.value));
+        }
+
         public static int GetAxis(string key)
         {
             return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value)) - 
                    Convert.ToInt32(Input.GetKey(_instance._keyValues[key].negativeKey.value));
         }
+
+        public static int GetSummedAxis(string key)
+        {
+            return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value)) +
+                   Convert.ToInt32(Input.GetKey(_instance._keyValues[key].negativeKey.value));
+        }
         
+        public static string GetKeyValue(string key, bool isNegative){
+            return isNegative ? (_instance._keyValues[key].negativeKey.value).ToString() : (_instance._keyValues[key].positiveKey.value).ToString();
+        }
     }
 }

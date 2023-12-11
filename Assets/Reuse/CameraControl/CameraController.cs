@@ -20,10 +20,12 @@ namespace Reuse.CameraControl
         private Camera _camera;
         private GameObject _actualCamera;
 
+
         public static GameObject ActualCamera => _instance._actualCamera;
         public static Quaternion ActualCameraRotation => _instance._actualCamera.transform.rotation;
         public static Vector3 ActualCameraPosition => _instance._actualCamera.transform.position;
-
+        
+        public static bool IsMainCameraReady = false;
         private void Awake()
         {
             if (_instance != null)
@@ -35,6 +37,7 @@ namespace Reuse.CameraControl
             _instance = this;
             
             _camera = Camera.main;
+            IsMainCameraReady = true;
             if(vCams.Count > 0) SwitchCamera(CameraType.Default);
         }
         
