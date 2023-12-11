@@ -76,22 +76,22 @@ namespace Reuse.Utils
         public static void ChangeProcConfigurationBasedOnProcAndDivisor<T>(ProcDefinition procDefinition, 
             T extraData, 
             float divisor = 2, 
-            MinimumFinderDelegate<T> minimumFinderDelegate = null)
+            MinimumFinderDelegate<T> minimumFinderDelegate = null,
+            bool useAmountOfProc = true)
         {
             var procAmounts = procDefinition.Proc;
             var min = minimumFinderDelegate?.Invoke(procAmounts, extraData) ?? BruteForceFindMin(procDefinition.Proc);
 
             List<int> indexNormal = new();
-            int multiplier = procDefinition.AmountOfProc > 0 ? procDefinition.AmountOfProc : 1; //Safe check, but if this happen the else shouldn't happen, unless there's error
+            float multiplier = divisor * ((procDefinition.AmountOfProc > 0 && useAmountOfProc) ? procDefinition.AmountOfProc : 1); //Safe check, but if this happen the else shouldn't happen, unless there's error
             float sumOfAbnormalProc = 0f;
-            
             for (int i = 0; i < procAmounts.Length; i++)
             { 
                 if(procAmounts[i] == min) indexNormal.Add(i);
                 else
                 {
-                    sumOfAbnormalProc = sumOfAbnormalProc + (procDefinition.ProcChances[i] = 
-                        procDefinition.DefaultProcChances[i] / (divisor * ((procAmounts[i] - min) * multiplier)));
+                    sumOfAbnormalProc += (procDefinition.ProcChances[i] = 
+                        procDefinition.DefaultProcChances[i] / (((procAmounts[i] - min) * multiplier)));
                 }
             }
 
