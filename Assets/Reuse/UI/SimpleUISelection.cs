@@ -29,6 +29,7 @@ namespace Reuse.UI
         {
             _actualKeyDelay = keyDelay;
             PlaceSelectionArrow();
+            arrow.gameObject.SetActive(true);
         }
 
         private void Update() 
@@ -59,12 +60,12 @@ namespace Reuse.UI
             option.Select();
         }
 
-        public void SetSelection(int line, int collumn)
+        public void SetSelection(SelectionOption option)
         {
             if(!this.enabled) return;
 
-            this._line = line;
-            this._column = collumn;
+            this._line = option.Line;
+            this._column = option.Column;
             FixLineAndColumn();
             PlaceSelectionArrow();
         }
@@ -75,7 +76,7 @@ namespace Reuse.UI
                 ExecuteSelection();
             }
         }
-
+        
         public void ExecuteSelection()
         {
             if(!this.enabled) return;

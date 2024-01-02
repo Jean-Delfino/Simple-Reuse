@@ -1,20 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Reuse.UI
 {
     public class SelectionOption : MonoBehaviour
     {
-        [SerializeField] private SimpleUISelection selection;
         [SerializeField] private Transform arrowPosition;
         [SerializeField] private int line;
         [SerializeField] private int column;
         [SerializeField] private GameObject onClick;
 
         private Button _button;
-
+        
+        public int Line => line;
+        public int Column => column;
         public Transform ArrowPosition => arrowPosition;
 
         private bool _locked = false;
@@ -25,13 +24,9 @@ namespace Reuse.UI
         {
             _button = GetComponent<Button>();
         }
-
-        public void SendSelectionToManager(){
-            selection.SetSelection(line, column);
-        }
-
-        public void Execute(){
-            onClick.SetActive(true);
+        
+        public virtual void Execute(){
+            if(onClick) onClick.SetActive(true);
         }
 
         public void Select(){

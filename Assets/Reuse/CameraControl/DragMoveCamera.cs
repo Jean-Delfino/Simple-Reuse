@@ -1,4 +1,6 @@
-﻿using Reuse.Utils;
+﻿using System;
+using System.Collections.Generic;
+using Reuse.Utils;
 using UnityEngine;
 
 //GameDevBox
@@ -16,14 +18,23 @@ namespace Reuse.CameraControl
         [SerializeField] private Vector2 minBoundIncrease;
         [SerializeField] private Vector2 maxBoundIncrease;
 
+        [SerializeField] private Vector2 minBoundToMax = Vector2.zero;
+        [SerializeField] private Vector2 minBoundToMin = Vector2.zero;
+
         private Vector2 _currentMinBounds;
         private Vector2 _currentMaxBounds;
 
         private bool _drag = false;
         public bool Drag => _drag;
+
+        private bool _hasBeenStarted = false;
+        public bool HasBeenStarted => _hasBeenStarted;
+        
+        private readonly HashSet<Func<float>> _multiplySensibility = new();
         private void Start()
         {
             _resetCamera = CameraController.GetMainCamera().transform.position;
+            _hasBeenStarted = true;
         }
 
         private void LateUpdate()
@@ -34,7 +45,7 @@ namespace Reuse.CameraControl
             {
                 var newMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 var cameraTransform = mainCamera.transform;
-                var pos = cameraTransform.position + ((newMousePos - _mousePos) * sensibilityControl);
+                var pos = cameraTransform.position + ((newMousePos - _mousePos) * GetSensibility());
 
                 cameraTransform.position = new Vector3(
                     Mathf.Clamp(pos.x, _currentMinBounds.x, _currentMaxBounds.x),
@@ -53,16 +64,48 @@ namespace Reuse.CameraControl
                 _drag = false;
             }
 
-            if (Input.GetMouseButton(1)) mainCamera.transform.position = _resetCamera;
+            if (Input.GetMouseButton(1)) ResetPos(mainCamera);
 
+        }
+
+        public void ResetPos()
+        {
+            CameraController.GetMainCamera().transform.position = _resetCamera;
+        }
+        
+        public void ResetPos(Camera mainCamera)
+        {
+            mainCamera.transform.position = _resetCamera;
         }
 
         public void DefineBounds(float minX, float minY, float maxX, float maxY)
         {
             var bounds = UtilCamera.GetSimpleCameraBoundsBasedOnWorldPos(minX, minY, maxX, maxY);
 
-            _currentMinBounds = new Vector2(bounds.minX + minBoundIncrease.x, bounds.minY + minBoundIncrease.y);
-            _currentMaxBounds = new Vector2(Mathf.Max(0,bounds.maxX + maxBoundIncrease.x), Mathf.Max(0,bounds.maxY + maxBoundIncrease.y));
+            _currentMinBounds = new Vector2(
+                Mathf.Min(minBoundToMin.x, bounds.minX + minBoundIncrease.x), 
+                Mathf.Min(minBoundToMin.y, bounds.minY + minBoundIncrease.y));
+            
+            _currentMaxBounds = new Vector2(
+                Mathf.Max(minBoundToMax.x,bounds.maxX + maxBoundIncrease.x), 
+                Mathf.Max( minBoundToMax.y,bounds.maxY + maxBoundIncrease.y));
+        }
+
+        public void AddSensibilityModifier(Func<float> modifier)
+        {
+            _multiplySensibility.Add(modifier);
+        }
+
+        public float GetSensibility()
+        {
+            var sensibility = sensibilityControl;
+
+            foreach (var func in _multiplySensibility)
+            {
+                sensibility *= func();
+            }
+
+            return sensibility;
         }
     }
 }

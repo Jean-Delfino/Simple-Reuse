@@ -24,6 +24,8 @@ namespace Reuse.CSV
             {
                 ReadAllVersatileFiles();
             }
+
+            _hasBeenInitialized = true;
         }
         
         public static void ChangeActualLanguage(int actualLanguage)
@@ -56,7 +58,7 @@ namespace Reuse.CSV
             var line = LocalizeLine(key);
             for(var i = 0; i < line.Length; i++)
             {
-                if(unknownLanguageWord == line[i]) return i;
+                if(string.Equals(unknownLanguageWord ,line[i])) return i;
             }
 
             return -1;
@@ -69,6 +71,11 @@ namespace Reuse.CSV
         public static string Localize(string key, bool isAlternative = false)
         {
             return !Texts.ContainsKey(key) ? null : (isAlternative ? Texts[key][_alternativeLanguage] : Texts[key][_actualLanguage]);
+        }
+
+        public static bool HasBeenInitialized()
+        {
+            return _hasBeenInitialized;
         }
     }
 }
