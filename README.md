@@ -1,9 +1,9 @@
-This is a repository for easy to analyze and free to copy codes (since some of them are not mine to begin with). This repository is good to study or develop real world code, in a near future I plan to make this a real thing, but for now it’s mostly a group of nice to have codes.
+This is a repository for easy to analyze and free to copy codes (since some of them are not mine to begin with). This repository is good to study or develop real world code, in the near future I plan to make this a real thing, but for now it’s mostly a group of nice to have codes.
 
 
 ## Interconnection
 
-Some codes are free to use (no need for a Unity setup), while other need to set up some elements, for now the “**CameraController**” and “**InputManager**”.
+Some codes are free to use (no need for a Unity setup), while others need to set up some elements, for now the “**CameraController**” and “**InputManager**”.
 
 
 ## Camera
@@ -11,7 +11,7 @@ Some codes are free to use (no need for a Unity setup), while other need to set 
 
 ### CameraController
 
-The CameraController is my most used script, not because it’s fantastic, or is the most well written code, it’s simple because I don’t need to use Camera.main, and it has several functions to me. It follow the rule of encapsulating native code into your own, so if Unity changes the way it uses Camera.main I need to change CameraController.
+The CameraController is my most used script, not because it’s fantastic, or is the most well written code, it’s simple because I don’t need to use Camera.main, and it has several functions to me. It follows the rule of encapsulating native code into your own, so if Unity changes the way it uses Camera.main I need to change CameraController.
 
 
 ### DragMoveCamera
@@ -33,12 +33,12 @@ The most useful part of the CSV is the “VersatileText” component.
 
 ## GameObjectOperations
 
-Here you find several operation in transform (rotation, position or scale) and Rigidbody, is useful for code reference when developing some enemy or object behavior.
+Here you find several operations in transform (rotation, position or scale) and Rigidbody, which is useful for code reference when developing some enemy or object behavior.
 
 
 ## InputManager
 
-I did my own input manager, the reason is simple, I can do a much easier key mapping in the future is I need, and without changing Unity native InputManager at any given point.
+I did my own input manager, the reason is simple, I can do a much easier key mapping in the future if I need, and without changing Unity native InputManager at any given point.
 
 
 ## Patterns
@@ -48,7 +48,7 @@ Here are some design patterns for Unity.
 
 ## Pooling 
 
-Here is a simple pooling idea, still incomplete if you consider all the way of spawning in Unity, but it’s usable.
+Here is a simple pooling idea, still incomplete if you consider all the ways of spawning in Unity, but it’s usable.
 
 
 ## Sound
@@ -58,17 +58,17 @@ Simple and useful sound manager, the idea is to make it more robust in the futur
 
 ## Utils
 
-Several amount of codes exist in the Utils, for diverse reasons, like, easy to access, no code duplication and even some performance. But because of this, you may lose some time just looking into each for a viable Util, here are some of the most useful ones:
+Several codes exist in the Utils, for diverse reasons, like, easy to access, no code duplication and even some performance. But because of this, you may lose some time just looking into each for a viable Util, here are some of the most useful ones:
 
 
 ### UtilCamera
 
-This Util has several function to work with the “CameraController” and some function based of the camera types of “Camera”.
+This Util has several functions to work with the “CameraController” and some functions based on the camera types of “Camera”.
 
 
 ### UtilImage
 
-This Util you can use to have a basic idea to how to deal with images, I used it in a simple card game project to make the layout, but games like “Bricks King” use similar ideas to build their map.
+This Util has a basic idea of how to deal with images, I used it in a simple card game project to make the layout, but games like “Bricks King” use similar ideas to build their map.
 
 
 ### UtilLanguage
@@ -82,7 +82,7 @@ This util is one I plan to expand as time goes by, because it’s reassuring to 
 
 
 
-* DefaultProcGeneration: Given a chance of every possible event, give you which event “Proc” (was generated randomly), but, this has a control method, which makes the most random “popular” events have less chances to be generated in the next “batch”. This, makes the generation more balanced.
+* DefaultProcGeneration: Given a chance of every possible event, give you which event “Proc” (was generated randomly), but, this has a control method, which makes the most random “popular” events have less chances to be generated in the next “batch”. This makes the generation more balanced.
 
 
 ### UtilRandom
