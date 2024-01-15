@@ -1,35 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using Reuse.Patterns;
 using UnityEngine;
 using KeyMappingValues = Reuse.InputManagement.InputManagerIndependent.InputMapper.KeyMappingValues;
 
 namespace Reuse.InputManagement.InputManagerIndependent
 {
-    public class InputManager : MonoBehaviour
+    public class InputManager : Singleton<InputManager>
     {
-        private static InputManager _instance;
-
         public InputMapper inputMapping;
         
         private readonly Dictionary<string, KeyMappingValues> _keyValues = new();
 
-        private void Awake()
+        private new void Awake()
         {
-            if (_instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            _instance = this;
+            base.Awake();
             SetKeyValues();
         }
 
         public static void SetKeyValues()
         {
-            var inputMappingDictionary = _instance._keyValues;
+            var inputMappingDictionary = Instance._keyValues;
             
-            foreach (var key in _instance.inputMapping.visibleMapping)
+            foreach (var key in Instance.inputMapping.visibleMapping)
             {
                 if (!inputMappingDictionary.ContainsKey(key.id))
                 {
@@ -44,28 +37,28 @@ namespace Reuse.InputManagement.InputManagerIndependent
 
         public static int GetKey(string key)
         {
-            return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value));
+            return Convert.ToInt32(Input.GetKey(Instance._keyValues[key].positiveKey.value));
         }
 
         public static int GetAllKey(string key)
         {
-            return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value) || Input.GetKey(_instance._keyValues[key].negativeKey.value));
+            return Convert.ToInt32(Input.GetKey(Instance._keyValues[key].positiveKey.value) || Input.GetKey(Instance._keyValues[key].negativeKey.value));
         }
 
         public static int GetAxis(string key)
         {
-            return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value)) - 
-                   Convert.ToInt32(Input.GetKey(_instance._keyValues[key].negativeKey.value));
+            return Convert.ToInt32(Input.GetKey(Instance._keyValues[key].positiveKey.value)) - 
+                   Convert.ToInt32(Input.GetKey(Instance._keyValues[key].negativeKey.value));
         }
 
         public static int GetSummedAxis(string key)
         {
-            return Convert.ToInt32(Input.GetKey(_instance._keyValues[key].positiveKey.value)) +
-                   Convert.ToInt32(Input.GetKey(_instance._keyValues[key].negativeKey.value));
+            return Convert.ToInt32(Input.GetKey(Instance._keyValues[key].positiveKey.value)) +
+                   Convert.ToInt32(Input.GetKey(Instance._keyValues[key].negativeKey.value));
         }
         
         public static string GetKeyValue(string key, bool isNegative){
-            return isNegative ? (_instance._keyValues[key].negativeKey.value).ToString() : (_instance._keyValues[key].positiveKey.value).ToString();
+            return isNegative ? (Instance._keyValues[key].negativeKey.value).ToString() : (Instance._keyValues[key].positiveKey.value).ToString();
         }
     }
 }

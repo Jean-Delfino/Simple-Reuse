@@ -1,4 +1,4 @@
-namespace Reuse.Pattern
+namespace Reuse.Patterns
 {
     public interface IPublisher
     {
