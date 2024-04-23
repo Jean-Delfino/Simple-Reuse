@@ -9,9 +9,20 @@ namespace Reuse.Checkpoint
 
         private void OnTriggerEnter(Collider other)
         {
-            var player = UtilGameObject.FindParentWithTag(other.gameObject, triggerTag);
+            GameObject player = null;
+
+            if (!other.CompareTag("Player"))
+            {
+                player = UtilGameObject.FindParentWithTag(other.gameObject, triggerTag);
+            }
+            else
+            {
+                player = other.gameObject;
+            }
+            
             if(player != null)
             {
+
                 player.GetComponent<TeleportTarget>().Teleport(CheckpointManager.GetLastCheckpoint());
                 
                 return;

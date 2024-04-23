@@ -30,17 +30,28 @@ namespace Reuse.Sound
             base.Awake();
         }
 
+        public void PlayOnlyIfNotPlaying(string key)
+        {
+            if (!audioClips.ContainsKey(key)) return;
+            
+            var source = audioClips[key];
+            if(!source.isPlaying) source.Play();
+        }
         public void PlayAudio(string key)
         {
             if (audioClips.ContainsKey(key))
             {
                 var source = audioClips[key];
                 source.Play();
+                return;
             }
-            else
-            {
-                Debug.LogWarning($"Key {key} not found !");
-            }
+
+            Debug.LogWarning($"Key {key} not found !");
+        }
+
+        public AudioClip GetClip(string key)
+        {
+            return audioClips.ContainsKey(key) ? audioClips[key].clip : null;
         }
     }
 }

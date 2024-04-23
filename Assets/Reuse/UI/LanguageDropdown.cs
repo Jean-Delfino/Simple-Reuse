@@ -13,6 +13,7 @@ namespace Reuse.UI
         [SerializeField] private string languageKey = "id_language_name";
 
         [SerializeField] private bool isAlternative = false;
+        
         private void Awake()
         {
             var languages = GameVersatileTextsLocator.LocalizeLine(languageKey);

@@ -11,7 +11,7 @@ namespace Reuse.CSV
         
         private static VersatileTextsFiles _files;
 
-        private static readonly HashSet<VersatileText> VersatileTexts = new();
+        private static readonly HashSet<IVersatileText> VersatileTexts = new();
 
         public void Awake()
         {
@@ -52,12 +52,12 @@ namespace Reuse.CSV
             }
         }
 
-        public static void Subscribe(VersatileText text)
+        public static void Subscribe(IVersatileText text)
         {
             VersatileTexts.Add(text);
         }
         
-        public static void Unsubscribe(VersatileText text)
+        public static void Unsubscribe(IVersatileText text)
         {
             VersatileTexts.Remove(text);
         }

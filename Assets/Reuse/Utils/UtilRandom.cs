@@ -6,14 +6,28 @@ namespace Reuse.Utils
 {
     public static class UtilRandom
     {
-        public static readonly Random RandomGenerator = new();
+        public static Random RandomGenerator = new();
         public delegate T GetRandomValueDelegate<T>(T min, T max);
 
+        public static void SetSeed(int seed)
+        {
+            RandomGenerator = new Random(seed);
+        }
+
+        public static void CreateWithoutSeed()
+        {
+            RandomGenerator = new Random();
+        }
         public static int RandomIndex(int limit)
         {
             return RandomGenerator.Next(limit);
         }
-        
+
+        public static int GetRandomIntInRange(int minValue, int maxValue)
+        {
+            return RandomGenerator.Next(minValue, maxValue);
+        }
+
         public static float GetRandomFloatInRange(double minNumber, double maxNumber)
         {
             return (float) (RandomGenerator.NextDouble() * (maxNumber - minNumber) + minNumber);
@@ -144,6 +158,16 @@ namespace Reuse.Utils
             var increase = 0;
             if(includeLowerCase) increase = RandomIndex(2) * 32; 
             return (char) (RandomGenerator.Next(65, 91) + increase);
+        }
+
+        public static T GetRandomWithin<T>(List<T> value)
+        {
+            return value[RandomIndex(value.Count)];
+        }
+
+        public static bool RandomNumberIsSmallerThen(double value)
+        {
+            return RandomGenerator.NextDouble() < value;
         }
     }
 }

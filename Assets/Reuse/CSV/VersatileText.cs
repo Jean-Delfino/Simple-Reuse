@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Reuse.CSV
 {
-    public class VersatileText : MonoBehaviour
+    public class VersatileText : MonoBehaviour, IVersatileText
     {
         [SerializeField] protected string textKey;
         [SerializeField] protected TextMeshProUGUI text;
@@ -33,7 +33,7 @@ namespace Reuse.CSV
             SetText(textKey);
         }
 
-        protected void SetText(string key)
+        public void SetText(string key)
         {
             var newText = GameVersatileTextsLocator.Localize(key, isAlternative);
             if(newText == null) return;

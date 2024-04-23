@@ -51,6 +51,12 @@ namespace Reuse.InputManagement.InputManagerIndependent
                    Convert.ToInt32(Input.GetKey(Instance._keyValues[key].negativeKey.value));
         }
 
+        public static int GetAxisLimit(string key, int limit = 1)
+        {
+            return Mathf.Min(Convert.ToInt32(Input.GetKey(Instance._keyValues[key].positiveKey.value)) +
+                             Convert.ToInt32(Input.GetKey(Instance._keyValues[key].negativeKey.value)), limit);
+        }
+
         public static int GetSummedAxis(string key)
         {
             return Convert.ToInt32(Input.GetKey(Instance._keyValues[key].positiveKey.value)) +

@@ -1,3 +1,4 @@
+using System;
 using Reuse.Patterns;
 using UnityEngine;
 
@@ -6,6 +7,12 @@ namespace Reuse.Checkpoint
     public class CheckpointManager : Singleton<CheckpointManager>
     {
         private Transform _lastCheckpoint;
+        [SerializeField] private Transform initialCheckpoint;
+
+        private void Start()
+        {
+            _lastCheckpoint = initialCheckpoint;
+        }
 
         public static void SetLastCheckpoint(Transform checkpoint)
         {

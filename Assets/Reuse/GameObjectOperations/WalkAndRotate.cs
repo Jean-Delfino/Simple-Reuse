@@ -4,8 +4,7 @@ namespace Reuse.GameObjectOperations
 {
     public class WalkAndRotate : MonoBehaviour
     {
-        [Header("SPEED AND ANIMATION SETTINGS")]
-        [SerializeField] private AnimationCurve velocityCurve;
+        [Header("SPEED AND ANIMATION SETTINGS")] 
         [SerializeField] private float duration = 2f;
         [SerializeField] private float stopTime = 1f;
         

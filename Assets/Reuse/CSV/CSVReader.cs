@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -9,40 +10,34 @@ namespace Reuse.CSV
 {
     public static class CommaSeparatedValuesReader
     {
-        private const string SplitRe = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
-        private const string LineSplitRe = @"\r\n|\n\r|\n|\r";
-        private static readonly char[] TrimChars = { '\"' };
-        
-        public static Dictionary<string, string[]> ReadCommaSeparatedFile(TextAsset data) 
+        public static Dictionary<string, string[]> ReadCommaSeparatedFile(TextAsset csvFile)
         {
-            var textKeyValues = new Dictionary<string, string[]>();
+            string[] lines = csvFile.text.Split('\n');
 
-            var lines = Regex.Split (data.text, LineSplitRe);
+            // Create a dictionary to hold the parsed CSV data
+            Dictionary<string, string[]> outputDict = new Dictionary<string, string[]>();
 
-            if(lines.Length <= 1) return textKeyValues;
+            // Process each line in the CSV
+            foreach (string line in lines)
+            {
+                string[] row = SplitCsvLine(line);
 
-            var header = Regex.Split(lines[0], SplitRe);
-            
-            for(var i = 1; i < lines.Length; i++) { //For all the lines
-
-                var columns = Regex.Split(lines[i], SplitRe);
-                var lineKey = columns[0]; //0 is the key
+                if (row.Length > 0)
+                {
+                    // Use the first column as the key and the rest as the value
+                    string key = row[0];
+                    string[] value = row.Length > 1 ? new List<string>(row).GetRange(1, row.Length - 1).ToArray() : new string[0];
                 
-                if(columns.Length == 0 || lineKey == "") continue;
-
-                var columnValues = new List<string>();
-
-                for(var j = 1; j < header.Length && j < columns.Length; j++ ) { //For all the columns, delimited by the initial header
-                    var value = columns[j];
-                    value = value.TrimStart(TrimChars).TrimEnd(TrimChars).Replace("\\", "");
-                    
-                    columnValues.Add(value);
+                    // Add the key-value pair to the dictionary
+                    outputDict[key] = value;
                 }
-                
-                textKeyValues.Add(lineKey, columnValues.ToArray()); //Easiest way
             }
-            
-            return textKeyValues;
+
+            return outputDict;
+        }
+        public static string[] SplitCsvLine(string line)
+        {
+            return line.Split('|');
         }
     }
 }

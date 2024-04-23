@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using TMPro;
+using UnityEngine;
 
 namespace Reuse.Utils
 {
@@ -39,6 +40,11 @@ namespace Reuse.Utils
             }
 
             return res;
+        }
+
+        public static string GetStringFormatNumberDecimalPlaces(float number, int decimalPlaces)
+        {
+            return number.ToString($"F{decimalPlaces}");
         }
     }
 }

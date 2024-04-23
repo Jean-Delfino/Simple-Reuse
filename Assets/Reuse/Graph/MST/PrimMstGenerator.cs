@@ -7,19 +7,19 @@ namespace Reuse.Graph.MST
     {
         private class PrimPriority
         {
-            public int Priority;
+            public float Weigth; //Or Priority
             public int Node;
             public int TargetedByNode;
 
-            public PrimPriority(int priority, int node, int targetedByNode)
+            public PrimPriority(float weigth, int node, int targetedByNode)
             {
-                Priority = priority;
+                Weigth = weigth;
                 Node = node;
                 TargetedByNode = targetedByNode;
             }
         }
         
-        public (int node, int targetedByNode)[] GenerateMst(Node[] nodes, int startingPoint = 0)
+        public (int node, int targetedByNode, float weigth)[] GenerateMst<T>(Node<T>[] nodes, int startingPoint = 0)
         {
             var edges = SetupEdges(nodes.Length, startingPoint);
 
@@ -29,19 +29,22 @@ namespace Reuse.Graph.MST
             
             while (connections.Count > 0)
             {
-                var newConnection = GetSmallestConnection(connections);
+                var newConnection = GetSmallestConnection(connections, edges);
 
+                if (newConnection == null) break;
+                
                 edges[newConnection.Node].targetedByNode = newConnection.TargetedByNode;
+                edges[newConnection.Node].weigth = newConnection.Weigth;
 
                 AddAllNodeConnections(nodes[newConnection.Node], newConnection.Node, edges, connections);
             }
             
-            return null;
+            return edges;
         }
 
-        private (int node, int targetedByNode)[] SetupEdges(int nodeAmount, int startingPoint)
+        private (int node, int targetedByNode, float weigth)[] SetupEdges(int nodeAmount, int startingPoint)
         {
-            (int node, int targetedByNode)[] edges = new (int, int)[nodeAmount];
+            (int node, int targetedByNode, float weigth)[] edges = new (int, int, float)[nodeAmount];
 
             for (int i = 0; i < nodeAmount; i++)
             {
@@ -53,38 +56,45 @@ namespace Reuse.Graph.MST
             return edges;
         }
 
-        private void AddAllNodeConnections(Node node, int nodeIndex, (int node, int targetedByNode)[] edges,
+        private void AddAllNodeConnections<T>(Node<T> node, int nodeIndex, (int node, int targetedByNode, float weigth)[] edges,
             List<PrimPriority> connections)
         {
             foreach (var edge in node.Edges)
             {
                 var currentEdgeConnection = edges[edge.TargetNode];
-                if(currentEdgeConnection.targetedByNode != -1) continue;
+                if(currentEdgeConnection.targetedByNode > -1) continue;
                 
                 connections.Add(new PrimPriority(edge.Weight, currentEdgeConnection.node, nodeIndex));
             }
         }
 
-        private PrimPriority GetSmallestConnection(List<PrimPriority> connections)
+        private PrimPriority GetSmallestConnection(List<PrimPriority> connections,(int node, int targetedByNode, float weigth)[] edges)
         {
             float min = float.MaxValue;
             int index = -1;
             for (int i = 0; i < connections.Count; i++)
             {
-                if (connections[i].TargetedByNode > -1)
+                if (edges[connections[i].Node].targetedByNode > -1)
                 {
                     connections.RemoveAt(i);
                     i--;
                     continue;
                 }
 
-                if (connections[i].Priority < min)
+                if (connections[i].Weigth < min)
                 {
                     index = i;
+                    min = connections[i].Weigth;
                 }
             }
 
-            return index > 0 ? connections[index] : null;
+            if (index < 0) return null;
+            
+            var value = connections[index];
+            connections.RemoveAt(index);
+            
+            return value;
+
         }
     }
 }

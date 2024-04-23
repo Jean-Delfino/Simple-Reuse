@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reuse.Utils
@@ -31,6 +32,16 @@ namespace Reuse.Utils
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }
+
+        public static float CalculateManhattanDistanceInGrid(int xStart, int yStart, int xDestination, int yDestination)
+        {
+            return CalculateManhattanDistance(new Vector2(xStart, yStart), new Vector2(xDestination, yDestination));
+        }
+
+        public static float CalculateHypotenuse(float a, float b)
+        {
+            return Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
+        }
         
         public static float CalculateEuclideanDistance(Vector2 a, Vector2 b)
         {
@@ -46,6 +57,53 @@ namespace Reuse.Utils
         public static float RoundToClosestLimit(float number, float min, float max)
         {
             return number - min < max - number ? min : max;
+        }
+        
+        public static bool IsPointInsideSquare(float xSquare, float ySquare, float width, float height, float xPoint, float yPoint)
+        {
+            float halfWidth = width /(float) 2 ;
+            float halfHeight = height /(float) 2;
+            
+            bool insideX = Mathf.Abs(xPoint - xSquare) <= halfWidth;
+            bool insideY = Mathf.Abs(yPoint - ySquare) <= halfHeight;
+
+            return insideX && insideY;
+        }
+
+        public static void ApplySpringForceLaw(ref Vector3 startObjectPosition, ref Vector3 endObjectPosition, float springConstant, float maxExpansionSpring, float maxTries, float closeEnough = 0.01f)
+        {
+            for (int i = 0; i < maxTries; i++)
+            {
+                Vector3 displacement;
+                int multiplier = 1;
+                if (startObjectPosition.y < endObjectPosition.y)
+                {
+                    displacement = endObjectPosition - startObjectPosition;
+                }
+                else
+                {
+                    displacement = startObjectPosition - endObjectPosition;
+                    multiplier = -1;
+                }
+                
+                var distance = Vector3.Distance(startObjectPosition, endObjectPosition);
+                var force = (-springConstant * (maxExpansionSpring - distance) / maxExpansionSpring) * displacement.normalized;
+                
+                if(force.magnitude < closeEnough) return;
+                
+                startObjectPosition += force * multiplier;
+                endObjectPosition -= force * multiplier;
+            }
+        }
+
+        public static double CalculateCoulombsForce(double ke, float q1, float q2, float distance)
+        {
+            return ke * ((Mathf.Abs(q1) * Mathf.Abs(q2)) / Mathf.Pow(distance, 2));
+        }
+        
+        public static double CalculateCoulombsForce(double ke, float q1, float q2, Vector3 q1Point, Vector3 q2Point)
+        {
+            return CalculateCoulombsForce(ke, q1, q2, Vector3.Distance(q1Point, q2Point));
         }
     }
 }
